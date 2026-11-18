@@ -20,7 +20,7 @@
     stackStart: 0.92,      // phones: a panel starts developing when its top is this far down the screen
     stackSpan: 0.6,        // phones: screens of scroll a panel takes to develop
     fact2: 'revision',     // r11 (Jerry, 10 Nov): 'revision': $21B annual revision surgeries. Before: 'patent': 1 US patent, on the alloy, to 2040. 'draper': 1st place, UCLA Draper Innovation Showcase, 2026.
-    fact3: 'transform'     // r11 (Jerry, 10 Nov): 'transform': TRANSFORM the standard of care. Before: 'years': 14 years of research behind it. 'firstThen': Plates and screws first. Then other metal implants.
+    fact3: 'transform'     // r11 (Jerry, 10 Nov): 'transform': Transform the standard (sentence case, Andrew 18 Nov) of care. Before: 'years': 14 years of research behind it. 'firstThen': Plates and screws first. Then other metal implants.
   });
 
   var BMH = window.BMH;
@@ -44,7 +44,7 @@
   /* [the big line, the line under it, how the big line is set: 'stat' a number, 'phrase' two short lines, 'word' one capitalised word] */
   var FACTS = {
     revision: ['$21B', 'annual revision surgeries.', 'stat'],
-    transform: ['TRANSFORM', 'the standard of care.', 'word'],
+    transform: ['Transform', 'the standard of care.', 'word'],
     patent: ['1 US patent', 'on the alloy, to 2040.'],
     draper: ['1st place', 'UCLA Draper Innovation Showcase, 2026.'],
     years: ['14 years', 'of research behind it.'],

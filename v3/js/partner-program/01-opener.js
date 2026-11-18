@@ -118,6 +118,7 @@
   }
   function load(src) {
     var im = new Image();
+    im.crossOrigin = 'anonymous';   // Webflow: the photographs come from another host and WebGL needs them clean
     im.src = src;
     return (im.decode ? im.decode() : new Promise(function (ok, no) { im.onload = ok; im.onerror = no; })).then(function () { return im; });
   }
@@ -259,8 +260,8 @@
      reports its CSS box there */
   Promise.all([
     load(img.currentSrc || img.src),
-    load('https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.0/v3/img/partner-program/01-opener/plates-field.webp'),
-    load('https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.0/v3/img/partner-program/01-opener/plates-region.webp')
+    load('https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/partner-program/01-opener/plates-field.webp'),
+    load('https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/partner-program/01-opener/plates-region.webp')
   ]).then(function (got) {
     return BMH.idle(function () {
       U.uPhoto.value = texture(got[0]);

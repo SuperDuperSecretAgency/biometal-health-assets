@@ -38,18 +38,23 @@
     step: [230, 70],           // one place to the next, source px: the photograph's own spacing
     /* phone: the plate's outline as a share of the width, and one place to the next in CSS px at the settled view, 375 wide */
     plateWidthPhone: 0.72,
-    stepPhone: [10, 96],
+    stepPhone: [0, 84],        // straight down, a little closer (Andrew, 18 Nov; was [10, 96])
     /* how the others arrive, since at scale 1 three more places would be in frame. 'spread': they start off the right of the
        frame and close up sideways as the view eases back, each at its own height, so nothing crosses the headline.
        'fade': each comes up pale in its place, left to right (it reads as a plate dissolving backwards) */
     reveal: 'spread',
+    /* line two, "Then the entire substrate.", goes from pale to blue (--brand-mid) left to right as the row thins (Andrew,
+       18 Nov). inkFrom/inkTo: where on the view's ease (0..1) the wipe starts and ends. inkLine false keeps it pale */
+    inkLine: true,
+    inkFrom: 0.15,
+    inkTo: 0.95,
     maxDpr: 2
   });
 
   /* From make-assets.py. dmax undoes the field's packing; bbox is the matte's box in source px: what gets fitted and centred.
      tail is how far the photograph's own shadow runs past that box on the right, source px: fitted with it, or the frame clips it */
   const INFO = { w: 701, h: 496, dmax: 40.01, bbox: [49, 49, 652, 447], tail: 19 };
-  const SRC = { photo: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.0/v3/img/technology/03-cutaway/row-photo.webp', field: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.0/v3/img/technology/03-cutaway/row-field.webp', still: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.0/v3/img/technology/03-cutaway/row-still.webp', stillPhone: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.0/v3/img/technology/03-cutaway/row-still-phone.webp', stillW: 1560, stillH: 618, phoneW: 696, phoneH: 1204 };
+  const SRC = { photo: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-photo.webp', field: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-field.webp', still: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-still.webp', stillPhone: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-still-phone.webp', stillW: 1560, stillH: 618, phoneW: 696, phoneH: 1204 };
   const LABEL = 'A row of zinc alloy bone plates, each thinner than the last, from whole to a fine outline.';
 
   const stage = sec.querySelector('.cut__stage');
@@ -71,6 +76,7 @@
       fig.setAttribute('aria-label', LABEL);
       const add = function (src, w, h, cls) {
         const im = new Image();
+      im.crossOrigin = 'anonymous';   // Webflow: the photographs come from another host and WebGL needs them clean
         im.alt = ''; im.width = w; im.height = h; im.decoding = 'async'; im.className = cls || '';
         im.src = src;
         fig.appendChild(im);
@@ -272,6 +278,7 @@
     if (w !== vw || h !== vh) { renderer.setSize(w, h, false); vw = w; vh = h; }
     dpr = renderer.getPixelRatio();
     drawRow(w, h, p);
+    if (K.inkLine) sec.style.setProperty('--cut-ink', BMH.smooth(K.inkFrom, K.inkTo, BMH.smooth(K.trackFrom, K.trackTo, p)).toFixed(4));
     renderer.render(scene, cam);
     drawn = true;
     stats.drawMs = performance.now() - t0;
