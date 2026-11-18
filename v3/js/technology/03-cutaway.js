@@ -54,7 +54,7 @@
   /* From make-assets.py. dmax undoes the field's packing; bbox is the matte's box in source px: what gets fitted and centred.
      tail is how far the photograph's own shadow runs past that box on the right, source px: fitted with it, or the frame clips it */
   const INFO = { w: 701, h: 496, dmax: 40.01, bbox: [49, 49, 652, 447], tail: 19 };
-  const SRC = { photo: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-photo.webp', field: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-field.webp', still: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-still.webp', stillPhone: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.1/v3/img/technology/03-cutaway/row-still-phone.webp', stillW: 1560, stillH: 618, phoneW: 696, phoneH: 1204 };
+  const SRC = { photo: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.2/v3/img/technology/03-cutaway/row-photo.webp', field: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.2/v3/img/technology/03-cutaway/row-field.webp', still: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.2/v3/img/technology/03-cutaway/row-still.webp', stillPhone: 'https://cdn.jsdelivr.net/gh/SuperDuperSecretAgency/biometal-health-assets@v2.0.2/v3/img/technology/03-cutaway/row-still-phone.webp', stillW: 1560, stillH: 618, phoneW: 696, phoneH: 1204 };
   const LABEL = 'A row of zinc alloy bone plates, each thinner than the last, from whole to a fine outline.';
 
   const stage = sec.querySelector('.cut__stage');
@@ -150,6 +150,7 @@
   function loadImage(src) {
     return new Promise(function (ok, no) {
       const im = new Image();
+      im.crossOrigin = 'anonymous';   // Webflow: the photographs come from another host and WebGL needs them clean
       im.onload = function () { ok(im); };
       im.onerror = no;
       im.src = src;
