@@ -108,13 +108,13 @@
     if (stacked) {
       panels.forEach(function (p) {
         var r = p.el.getBoundingClientRect();
-        apply(p, BMH.clamp((vh * KNOBS.stackStart - r.top) / (vh * KNOBS.stackSpan), 0, 1));
+        apply(p, BMH.clamp((vh * KNOBS.stackStart - (r.top + BMH.glideOff())) / (vh * KNOBS.stackSpan), 0, 1));
       });
       return;
     }
     var r = track.getBoundingClientRect();
     var lead = KNOBS.leadIn * vh + pinTop;
-    var t = BMH.clamp((lead - r.top) / (r.height - vh + lead), 0, 1);
+    var t = BMH.clamp((lead - (r.top + BMH.glideOff())) / (r.height - vh + lead), 0, 1);   /* glideOff: 0 unless the scroll glide is on */
     panels.forEach(function (p, i) {
       apply(p, BMH.clamp((t - i * KNOBS.stagger) / KNOBS.panelLength, 0, 1));
     });

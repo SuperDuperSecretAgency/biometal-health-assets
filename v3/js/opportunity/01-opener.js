@@ -285,7 +285,7 @@
     layout(st.vw, st.vh);
     if (!onScreen || mode !== 'unfold') return;
     var r = BMH.rect(root);
-    var t = BMH.clamp(-r.top / Math.max(1, trackH - st.vh), 0, 1);
+    var t = BMH.clamp(-(r.top + BMH.glideOff()) / Math.max(1, trackH - st.vh), 0, 1);   /* glide (19 Nov) */
     var together = KNOBS.order === 'together', moved = dirty;
     fresh.forEach(function (p, i) {
       if (apply(p, together ? t : BMH.clamp((t - i * KNOBS.stagger) / KNOBS.openLength, 0, 1))) moved = true;

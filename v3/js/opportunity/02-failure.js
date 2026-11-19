@@ -74,14 +74,14 @@
     if (stacked) {
       lines.forEach(function (l) {
         var r = l.slot.getBoundingClientRect();
-        rise(l, BMH.clamp((vh * KNOBS.stackStart - r.top) / (vh * KNOBS.stackSpan), 0, 1));
+        rise(l, BMH.clamp((vh * KNOBS.stackStart - (r.top + BMH.glideOff())) / (vh * KNOBS.stackSpan), 0, 1));
       });
       if (lastImg !== 0) { img.style.transform = ''; lastImg = 0; }
       return;
     }
     var r = track.getBoundingClientRect();
     var lead = KNOBS.leadIn * vh;
-    var t = BMH.clamp((lead - r.top) / (r.height - vh + lead), 0, 1);
+    var t = BMH.clamp((lead - (r.top + BMH.glideOff())) / (r.height - vh + lead), 0, 1);   /* glide (19 Nov) */
     lines.forEach(function (l) { rise(l, (t - l.at) / l.len); });
     if (KNOBS.pushIn) {
       var s = Math.round((1 + KNOBS.pushIn * (1 - BMH.smooth(0, 1, t))) * 10000) / 10000;

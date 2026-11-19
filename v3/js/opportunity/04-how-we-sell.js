@@ -41,7 +41,7 @@
     if (!onscreen) return;
     const r = chain.getBoundingClientRect();
     const a = st.vh * KNOBS.drawStart, b = st.vh * KNOBS.drawEnd;
-    const p = BMH.clamp((a - r.top) / Math.max(1, a - b + r.height), 0, 1);
+    const p = BMH.clamp((a - (r.top + BMH.glideOff())) / Math.max(1, a - b + r.height), 0, 1);   /* glide (19 Nov) */
     if (Math.abs(p - last) < 0.0005) return;
     last = p;
     paint(p);

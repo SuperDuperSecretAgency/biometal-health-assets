@@ -57,13 +57,13 @@
   }
 
   function tip() {
-    var vh = window.innerHeight, lr = line.getBoundingClientRect();
+    var vh = window.innerHeight, lr = line.getBoundingClientRect(), lt = lr.top + BMH.glideOff();   /* glide (19 Nov) */
     if (wide) {
-      var y = lr.top + lr.height / 2;          // where the line is on the screen
+      var y = lt + lr.height / 2;          // where the line is on the screen
       var span = Math.max(0.05, KNOBS.drawStart - KNOBS.drawEnd) * vh;
       return BMH.clamp((KNOBS.drawStart * vh - y) / span, 0, 1) * len;
     }
-    return BMH.clamp(vh * KNOBS.tipAt - lr.top, 0, len);
+    return BMH.clamp(vh * KNOBS.tipAt - lt, 0, len);
   }
 
   function draw() {

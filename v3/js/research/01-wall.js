@@ -160,7 +160,7 @@
 
   function frame() {
     if (!geo) return;
-    var s = -sec.getBoundingClientRect().top;                  // scroll into the section
+    var s = -(sec.getBoundingClientRect().top + BMH.glideOff());   /* glide (19 Nov) */                  // scroll into the section
     var vh = geo.vh;
     var fEnd = Math.max(1, geo.pinAt + KNOBS.focus * vh);
     var f = BMH.smooth(0, 1, s / fEnd);                        // 0 arrival .. 1 sharp

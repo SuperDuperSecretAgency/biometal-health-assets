@@ -46,6 +46,9 @@
                              o.antialias false: no canvas multisampling, for scenes that finish with a full-screen pass
                              from their own multisampled target. Default true.
      studio(renderer)        a PMREM environment map from THREE.RoomEnvironment, for metal.
+     glideOff()              inside an onScroll callback: how far the glide's eased scroll position trails the real one
+                             (px, real - eased; 0 with the glide off, and outside the tick). For a section that reads a
+                             box's top itself instead of through pinProgress/passProgress: use r.top + BMH.glideOff().
      knobs(name, defaults)   a section's KNOBS, with any overrides a review board injected
                              (window.BMH_KNOBS = { hero: {...} }) merged over them. No board, no change.
      look                    'dark' or 'light': the site's look (28 Sep). The main site is 'dark', meaning it keeps
@@ -89,11 +92,36 @@
      the viewport size changed reads live, so a section that resizes its track in that tick still sees the new box. */
   var subs = [], queued = false, inTick = false, lastW = -1, lastH = -1, lastScrollAt = -1e9, tickVH = 0;
   var boxes = new Map();                            /* el -> the box measured at the start of this tick (or null) */
-  function tick() {
+  /* Glide (18 Nov, client note on mouse-wheel steps). ON since 19 Nov at 80 ms (Light); knobs 'scroll': { glide: 0 } turns it off.
+     With glide: 1 the scroll position the sections see (st.y, and the box tops pinProgress/passProgress use) eases
+     toward the real scrollY with time constant glideMs, so scroll-linked animation runs between wheel steps instead of
+     jumping. The page itself scrolls natively; boxes from BMH.rect stay true, so sticky stages and layout never lag.
+     Snaps (no glide): the first tick, a viewport resize, reduced motion, and a jump of more than a screen in one frame
+     (an anchor, a restored scroll). The loop keeps ticking until the eased value settles within half a pixel. */
+  var GLIDE = { glide: 1, glideMs: 80 };            /* on, Light (Andrew, 19 Nov 2026: "the light glide, option 2") */
+  (function (o) { if (o) for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) GLIDE[k] = o[k]; })((window.BMH_KNOBS || {}).scroll);
+  BMH.glide = GLIDE;
+  var easedY = null, prevRealY = 0, lastT = -1, glideOff = 0;
+  function tick(t) {
     queued = false;
     if (!subs.length) return;
-    var st = { y: window.scrollY || window.pageYOffset, vh: window.innerHeight, vw: window.innerWidth };
+    var realY = window.scrollY || window.pageYOffset;
+    var st = { y: realY, vh: window.innerHeight, vw: window.innerWidth };
     var same = st.vw === lastW && st.vh === lastH;
+    var dt = lastT < 0 ? 16.7 : Math.min(Math.max(t - lastT, 0), 34);
+    lastT = t;
+    if (!GLIDE.glide || !(GLIDE.glideMs > 0) || BMH.reduced || easedY === null || !same ||
+        Math.abs(realY - prevRealY) > st.vh) {
+      easedY = realY;
+    } else {
+      easedY += (realY - easedY) * (1 - Math.exp(-dt / GLIDE.glideMs));
+      if (Math.abs(realY - easedY) < 0.5) easedY = realY;
+    }
+    prevRealY = realY;
+    glideOff = realY - easedY;
+    st.y = easedY;
+    if (glideOff !== 0) queue();                    /* keep ticking until it settles */
+    else lastT = -1;
     lastW = st.vw; lastH = st.vh; tickVH = st.vh;
     boxes.forEach(function (r, el) { boxes.set(el, same && el.isConnected ? el.getBoundingClientRect() : null); });
     inTick = true;
@@ -113,13 +141,14 @@
   /* the viewport height, read once per tick too: window.innerHeight forces a style and layout pass of its own when
      a section has just written a style */
   BMH.vh = function () { return inTick ? tickVH : window.innerHeight; };
+  BMH.glideOff = function () { return inTick ? glideOff : 0; };
   BMH.pinProgress = function (el) {
-    var r = BMH.rect(el), vh = BMH.vh(), span = r.height - vh;
-    return span <= 0 ? (r.top <= 0 ? 1 : 0) : BMH.clamp(-r.top / span, 0, 1);
+    var r = BMH.rect(el), vh = BMH.vh(), span = r.height - vh, top = r.top + BMH.glideOff();
+    return span <= 0 ? (top <= 0 ? 1 : 0) : BMH.clamp(-top / span, 0, 1);
   };
   BMH.passProgress = function (el) {
-    var r = BMH.rect(el), vh = BMH.vh();
-    return BMH.clamp((vh - r.top) / (vh + r.height), 0, 1);
+    var r = BMH.rect(el), vh = BMH.vh(), top = r.top + BMH.glideOff();
+    return BMH.clamp((vh - top) / (vh + r.height), 0, 1);
   };
 
   /* ---- quiet-time work (Webflow, 17 Oct, perf/AUDIT.md site-core-3d-helpers) ----
