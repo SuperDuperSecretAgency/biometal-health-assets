@@ -35,7 +35,7 @@
                            // null = region only for '1017' under 'candidate', hardware otherwise. Our compliance pass read
                            // bones named under "first" as a list of indications (PLAN Q3, checklist §4.5): README
     slot6: 'hip',          // 'firstThen' panel 6: 'hip' the hip screw, 'shin' the shin nail (the 375 call is in NOTES.md)
-    phoneRows: 'stagger',  // phones: 'stagger' = the top row with line one, then the bottom row with line two.
+    phoneRows: 'together', // all six the same way (Garett via Diane, 19 Nov 2026; Andrew: "bring all six X-rays in the same way"). phones: 'stagger' = the top row with line one, then the bottom row with line two.
                            // 'together' = all six, left to right, 0.14 s apart (as built)
     rowGapMs: 900,         // 'stagger': ms from the top row to the bottom row and line two
     look: BMH.look,        // 'dark': the dark hero (the main site). 'light': light films, a pale shade, navy type and tags
@@ -44,7 +44,7 @@
     scrim: null,           // how strong the even scrim over every film is, 0 to 1. null = the default (dark 0.3, light film 0.7, light look 0)
     shade: null,           // how strong the shade behind the headline is, 0 to 1. null = the default (dark 0.62, light film 0.55, light look 0.85)
     place: 'foot',         // where the headline sits: 'foot' = low on the left, 'middle' = halfway up, still left-aligned
-    motion: 'unfold',      // desktop: 'unfold' = pinned, three films open into six as you scroll. 'arrive' = all six, each develops once
+    motion: 'arrive',      // all six the same way (19 Nov 2026; was 'unfold'). desktop: 'unfold' = pinned, three films open into six as you scroll. 'arrive' = all six, each develops once
     scrollLength: 1.0,     // 'unfold': screens of scroll the row takes to open (the stage is pinned for this long)
     order: 'left',         // 'unfold': 'left' = the new films open one after another, left to right. 'together' = all three at once
     stagger: 0.2,          // 'unfold', 'left': share of the opening between one film starting and the next

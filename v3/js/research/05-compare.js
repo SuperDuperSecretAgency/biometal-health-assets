@@ -6,7 +6,7 @@
   if (!root || !window.BMH) return;
 
   var KNOBS = window.BMH.knobs('res-compare', {
-    stiffnessRow: true,  // false hides "Close to bone's stiffness" (zinc's modulus is disputed; see the project CLAUDE.md §8)
+    stiffnessRow: false, // the row is gone from the markup (Andrew, 19 Nov 2026: zinc alloys are stiffer than bone). Kept so old overrides don't break
     marks: 'words'       // 'words' (Yes / No / —) or 'symbols' (the live site's ✓ ✗ –)
   });
 
